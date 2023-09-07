@@ -1,0 +1,78 @@
+<div *ngFor="let task of tree" [style.padding-left.px]="[30 * task.level]">
+  <div class="main-section" *ngIf="!task.isHidden">
+    <button
+      *ngIf="task.hasChildren"
+      class="expand-button"
+      [ngClass]="task.isExpanded ? 'expand-button-rotate' : ''"
+      (click)="expandNode(task)"
+      [title]="!task.isExpanded ? 'Expand' : 'Collapse'"
+    >
+      <svg>
+        <use xlink:href="assets/icons.svg#expand-icon"></use>
+      </svg>
+    </button>
+    <svg *ngIf="task.level === 0" class="task-icon">
+      <use xlink:href="assets/icons.svg#task-icon"></use>
+    </svg>
+    <svg *ngIf="task.level !== 0" class="step-icon">
+      <use xlink:href="assets/icons.svg#step-icon"></use>
+    </svg>
+    <span>{{ task.name }}</span>
+    <span *ngIf="task.owner.length > 0" class="name-delimiter"> - </span>
+    <span *ngIf="task.owner.length > 0" class="task-owner">
+      {{ task.owner }}
+    </span>
+    <button
+      *ngIf="addTaskIndex !== task.id"
+      class="add-step"
+      (click)="addStep(task.id)"
+      title="Add Step"
+    >
+      <svg class="add-icon">
+        <use xlink:href="assets/icons.svg#add-icon"></use>
+      </svg>
+    </button>
+  </div>
+  <div *ngIf="addTaskIndex === task.id" class="add-step-form">
+    <div>
+      <form [formGroup]="addStepForm">
+        <div>
+          <span>Step Name:</span>
+          <input
+            formControlName="stepName"
+            style="margin-left: 15px"
+            type="text"
+            placeholder="Insert Step Name"
+          />
+        </div>
+        <div class="owner-name-input">
+          <span>Owner Name:</span>
+          <input
+            formControlName="ownerName"
+            style="margin-left: 3px"
+            type="text"
+            placeholder="Insert Owner Name"
+          />
+        </div>
+      </form>
+    </div>
+    <div>
+      <button class="cancel-step" (click)="cancelStep()" title="Cancel Step">
+        <svg>
+          <use xlink:href="assets/icons.svg#cancel-icon"></use>
+        </svg>
+      </button>
+      <button
+        class="save-step"
+        (click)="saveStep(task)"
+        title="Save Step"
+        [disabled]="isInvalid()"
+        [ngClass]="isInvalid() ? 'save-step-disabled' : ''"
+      >
+        <svg>
+          <use xlink:href="assets/icons.svg#save-icon"></use>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
